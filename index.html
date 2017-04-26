@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+<!--      aditya commented out ----below is additional--  aditya commented out -->
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+<!--      aditya commented out ----above is additional--  aditya commented out   var datastring = $("#contactForm").serialize(); -->
+
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>
+
+var datastring = $('#userForm').serialize();
+//console.log(datastring); 
+
+
+function makeAjaxCall(){
+
+//var formArray = $('#userForm').serializeArray();
+//var formArray = JSON.stringify($("#userForm").serializeArray());
+//console.log(formArray); 
+
+ 
+//var formArray = $('#userForm').serialize();
+//var formArray = JSON.stringify($("#userForm").serialize());
+//console.log(formArray); 
+
+
+
+
+
+
+
+
+//console.log(formArray);
+
+
+
+//var datastring = $('#userForm').serialize();
+//console.log(datastring); 
+
+ // var formdata = JSON.stringify($("#userForm").serializeArray());
+ //console.log(formdata);
+
+//var formData = $("form.login").serializeObject();
+//console.log(formData);
+
+var yourdomain = 'prabircompany'; // Your freshdesk domain name. Ex., yourcompany
+        var api_key = 'R5rGGZzLXQ3QLNGM8d0w'; // Ref: https://support.freshdesk.com/support/solutions/articles/215517-how-to-find-your-api-key
+       // var datastring = $('#userForm').serialize();
+       //var data = form.serializeArray();
+       // ticket_data = '{ "description": "Details about the issue...", "subject": "Support Needed...", "email": "tom@outerspace.com", "priority": 1, "status": 2, "cc_emails": ["ram@freshdesk.com","diana@freshdesk.com"] }';
+
+//    var lookup = {
+//    'name': name,
+//    'description': description,
+ //   'items': [{
+ //       'name': itemName,
+ //       'value': itemValue
+//    }]
+//}
+
+//this worked
+//var formdata = new FormData();
+//        formdata.append('description', 'sample description');
+//        formdata.append('email', 'tom@outerspace.com');
+//        formdata.append('subject', 'Test subject');
+//        formdata.append('priority', '2');
+//        formdata.append('status', '2');
+       // formdata.append('attachments[]', $('#myFile')[0].files[0]);
+
+//console.log(formdata);
+
+
+ //body = '{"helpdesk_ticket":{"description":"'+jQuery('#desc_req').val() + '", "subject":"' + jQuery('#title_req').val() +'", "email":"' + jQuery('#email_req').val()+'","priority":1,"status":2,"custom_field":{ "customer_id_175593" :"'+jQuery('#custom_req').val()+'" }}}';  
+
+ body = '{"helpdesk_ticket":{"description":"'+jQuery('#description').val() + '", "subject":"' + jQuery('#subject').val() +'", "email":"' + jQuery('#email').val()+'","priority":1,"status":2, }}';  
+
+ ticket_data = '{ "description": "'+jQuery('#description').val() + '", "subject": "' + jQuery('#subject').val() +'", "email": "' + jQuery('#email').val()+'", "priority": 1, "status": 2, "cc_emails": ["ram@freshdesk.com","diana@freshdesk.com"] }';
+
+//ticket_data = '{ "description": "Details about the issue...", "subject": "Support Needed...", "email": "tom@outerspace.com", "priority": 1, "status": 2, "cc_emails": ["ram@freshdesk.com","diana@freshdesk.com"] }';
+
+
+
+console.log(ticket_data);
+
+//with this if we remove //data :body then it prints body  otherwise it does not print body and oes not move ahead
+
+    $.ajax(
+          {
+            url: "https://"+yourdomain+".freshdesk.com/api/v2/tickets",
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            //contentType: "application/json",
+            //processData: false,
+
+
+           dataType: "json",
+            headers: {
+              "Authorization": "Basic " + btoa(api_key + ":x")
+            },
+            //data: JSON.stringify(datastring),
+            //data : body
+              //data : formArray,
+             //data : formdata,
+            //data: datastring,
+            data: ticket_data,
+            success: function(data, textStatus, jqXHR) {
+              $('#result').text('Success');
+              $('#code').text(jqXHR.status);
+              $('#response').html(JSON.stringify(data, null, "<br/>"));
+            },
+            error: function(jqXHR, tranStatus) {
+              $('#result').text('Error');
+              $('#code').text(jqXHR.status);
+              x_request_id = jqXHR.getResponseHeader('X-Request-Id');
+              response_text = jqXHR.responseText;
+              $('#response').html(" Error Message : <b style='color: red'>"+response_text+"</b>.<br/> Your X-Request-Id is : <b>" + x_request_id + "</b>. Please contact support@freshdesk.com with this id for more information.");
+            }
+          }
+        );
+}
+
+</script>
+
+
+
+
+
+
+
+        <title>Hello World</title>
+    </head>
+    <body>
+        <div class="app">
+            <h1>PhoneGap</h1>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready aditya lal</p>
+            </div>
+        </div>
+
+<!--      aditya commented out ----below is additional--  aditya commented out -->
+
+  
+  <button id="record">capture audio</button>
+
+
+<div id="txt">
+ 
+            <input   type="text" name="firstname" id="firstname" />
+ 
+            </div>
+ 
+            <div id ="btn">
+ 
+    <a href="#" class="btn" onclick="displayHello();">Say Hello</a>
+ 
+            </div>
+
+
+
+<form name="userForm" id="userForm" action="">
+<table border="1">
+    <tr>
+        <td valign="top" align="left">        
+        cc_emails:- <input type="text" name="cc_emails" id="cc_emails" value="">
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" align="left">        
+        subject :- <input type="text" name="subject" id="subject" value="">
+        </td>
+    </tr>
+
+<tr>
+        <td valign="top" align="left">        
+        priority:- <input type="text" name="priority" id="priority" value="">
+        </td>
+    </tr>
+
+
+<tr>
+        <td valign="top" align="left">        
+        email:- <input type="text" name="email" id="email" value="">
+        </td>
+    </tr>
+
+
+<tr>
+        <td valign="top" align="left">        
+        description:- <input type="text" name="description" id="description" value="">
+        </td>
+    </tr>
+
+
+
+    <tr>
+        <td>
+            <input type="button" onclick="javascript:makeAjaxCall();" value="Submit"/>
+        </td>
+    </tr>
+</table>
+</form>
+
+
+<table cellspacing = '10'>
+  <tr>
+    <td> <b>Result</b></td>
+    <td> <div id = 'result'></div> </td>
+  </tr>
+  <tr>
+    <td> <b>Code</b></td>
+    <td> <div id = 'code'></div> </td>
+  </tr>
+  <tr>
+    <td> <b>Response</b></td>
+    <td> <div id = 'response'></div> </td>
+  </tr>
+</table>
+
+
+
+
+
+
+
+<script type="text/javascript" charset="utf-8">
+ 
+              var displayHello = function() {
+ 
+                        var name =      document.getElementById("firstname").value;
+ 
+                        navigator.notification.alert("hello" + name);
+ 
+            }
+ 
+   </script>
+   
+
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    // Use an event listener to detect if PhoneGap is ready
+    //
+    function onLoad() {
+        document.addEventListener("deviceready", onDeviceReady, false);
+    }
+
+    // okay, PhoneGap is ready
+    //
+    function onDeviceReady() {
+        var myDiv = document.getElementById('props');
+
+        myDiv.innerHTML =   'Device Name: '     + device.name     + '<br />' + 
+                            'Device PhoneGap: ' + device.phonegap + '<br />' + 
+                            'Device Platform: ' + device.platform + '<br />' + 
+                            'Device UUID: '     + device.uuid     + '<br />' + 
+                            'Device Version: '  + device.version  + '<br />';
+    }
+
+    </script>
+
+<!--      aditya commented out  above is additional  aditya commented out -->
+
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+
+
+
+
+<!--      aditya commented out ----below is additional--  aditya commented out -->
+
+<body onload="onLoad()">
+    <p id="props">Loading device properties...</p>
+  </body>
+   
+ <!--      aditya commented out  above is additional  aditya commented out -->
+    </body>
+</html>
+
+
